@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Particle Background</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #121212;
+        }
+        
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            z-index: 1;
+        }
+        
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            font-family: monospace;
+        }
+        
+        button {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #444;
+            color: white;
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        input[type="range"] {
+            width: 100px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Interactive Background</h1>
+        <p>Move your mouse to interact with particles</p>
+    </div>
+    
+    <div class="controls">
+        <div>
+            <button id="resetBtn">Reset Particles</button>
+            <button id="colorBtn">Change Color</button>
+        </div>
+        <div>
+            <label>Particle Count: <span id="countValue">150</span></label><br>
+            <input type="range" id="countSlider" min="50" max="500" value="150">
+        </div>
+        <div>
+            <label>Connection Distance: <span id="distValue">100</span></label><br>
+            <input type="range" id="distSlider" min="50" max="300" value="100">
+        </div>
+        <div>
+            <label>Mouse Influence: <span id="influenceValue">100</span></label><br>
+            <input type="range" id="influenceSlider" min="0" max="200" value="100">
+        </div>
+    </div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.createElement('canvas');
+        document.body.appendChild(canvas);
+        const ctx = canvas.getContext('2d');
+        
+        // Resize canvas to window
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        // Configuration
+        const config = {
+            particleCount: 150,
+            particleSize: 3,
+            lineDistance: 100,
+            mouseRadius: 100,
+            particleColor: '#ffffff',
+            lineColor: 'rgba(255,255,255,0.2)',
+            maxSpeed: 0.5,
+            mouseInfluence: 100
+        };
+        
+        // Mouse position
+        const mouse = {
+            x: null,
+            y: null,
+            radius: config.mouseRadius
+        };
+        
+        document.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        
+        document.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        }, { passive: false });
+        
+        // Particle class
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = config.particleSize;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * config.maxSpeed,
+                    y: (Math.random() - 0.5) * config.maxSpeed
+                };
+            }
+            
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fillStyle = config.particleColor;
+                ctx.fill();
+            }
+            
+            update() {
+                // Mouse interaction
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < mouse.radius) {
+                    const forceDirectionX = dx / distance;
+                    const forceDirectionY = dy / distance;
+                    const force = (mouse.radius - distance) / mouse.radius;
+                    
+                    this.x -= forceDirectionX * force * this.density * (config.mouseInfluence/100);
+                    this.y -= forceDirectionY * force * this.density * (config.mouseInfluence/100);
+                }
+                
+                // Return to original position with some randomness
+                if (this.x !== this.baseX) {
+                    const dx = this.baseX - this.x;
+                    this.x += dx / 10;
+                }
+                
+                if (this.y !== this.baseY) {
+                    const dy = this.baseY - this.y;
+                    this.y += dy / 10;
+                }
+                
+                // Random movement
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                
+                // Boundary check
+                if (this.x < 0 || this.x > canvas.width) this.velocity.x *= -1;
+                if (this.y < 0 || this.y > canvas.height) this.velocity.y *= -1;
+            }
+        }
+        
+        // Create particles
+        let particles = [];
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < config.particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        
+        // Draw connecting lines
+        function drawLines() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    const dx = particles[a].x - particles[b].x;
+                    const dy = particles[a].y - particles[b].y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < config.lineDistance) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = config.lineColor;
+                        ctx.lineWidth = 1 - (distance / config.lineDistance);
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+        
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            drawLines();
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Controls
+        document.getElementById('resetBtn').addEventListener('click', initParticles);
+        
+        document.getElementById('colorBtn').addEventListener('click', () => {
+            const colors = ['#4fc3f7', '#4dd0e1', '#4db6ac', '#81c784', '#dce775', '#ffd54f', '#ff8a65', '#f06292'];
+            config.particleColor = colors[Math.floor(Math.random() * colors.length)];
+            config.lineColor = config.particleColor.replace(')', ', 0.2)').replace('rgb', 'rgba');
+        });
+        
+        document.getElementById('countSlider').addEventListener('input', (e) => {
+            config.particleCount = e.target.value;
+            document.getElementById('countValue').textContent = e.target.value;
+            initParticles();
+        });
+        
+        document.getElementById('distSlider').addEventListener('input', (e) => {
+            config.lineDistance = e.target.value;
+            document.getElementById('distValue').textContent = e.target.value;
+        });
+        
+        document.getElementById('influenceSlider').addEventListener('input', (e) => {
+            config.mouseInfluence = e.target.value;
+            document.getElementById('influenceValue').textContent = e.target.value;
+        });
+        
+        // Initialize
+        initParticles();
+        animate();
+    </script>
+</body>
+</html>
