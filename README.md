@@ -34,7 +34,7 @@ interactive-background/
 ### 1. Clone or Download
 
 ```bash
-git clone https://github.com/your-username/interactive-background.git
+git clone https://github.com/Zainalabrori/interactive-background.git
 ```
 
 ### 2. Open in Browser
@@ -49,6 +49,4 @@ You can open index.html directly in your preferred web browser. No build step re
 - Mouse Influence — Adjust how much particles are pushed away by the mouse
 
 ### 🖼️ Preview
-Move your mouse or touch the screen to interact with the particles.
-
-<!-- Replace this line with your own preview GIF or remove it -->
+Coming soon!
