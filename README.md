@@ -50,3 +50,24 @@ You can open index.html directly in your preferred web browser. No build step re
 
 ### 🖼️ Preview
 Coming soon!
+
+### 🛠️ Customization
+You can customize the animation by editing the config object in the JavaScript section of index.html:
+```
+const config = {
+  particleCount: 150,
+  particleSize: 3,
+  lineDistance: 100,
+  mouseRadius: 100,
+  particleColor: '#ffffff',
+  lineColor: 'rgba(255,255,255,0.2)',
+  maxSpeed: 0.5,
+  mouseInfluence: 100
+};
+```
+
+Feel free to add more parameters or link external stylesheets/scripts if needed.
+
+### 🤝 Contributing
+Contributions, issues, and feature requests are welcome!
+Feel free to fork the repository and submit a pull request.
