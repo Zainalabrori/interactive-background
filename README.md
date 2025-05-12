@@ -4,6 +4,10 @@ A visually engaging and interactive particle background built with **HTML5 Canva
 
 ---
 
+## 🌐 Live Demo
+
+[🔗 Visit Live Website](https://zainalabrori.github.io/interactive-background/)
+
 ## 🚀 Features
 
 - ✨ Responsive animated background using Canvas
@@ -71,3 +75,7 @@ Feel free to add more parameters or link external stylesheets/scripts if needed.
 ### 🤝 Contributing
 Contributions, issues, and feature requests are welcome!
 Feel free to fork the repository and submit a pull request.
+
+## ✨ Author
+
+Made with ❤️ by [Zainal Abrori](https://www.linkedin.com/in/zainal-abrori-bb242829b/)
