@@ -14,6 +14,14 @@ A visually engaging and interactive particle background built with **HTML5 Canva
 - 🔧 Adjustable particle count, connection distance, and mouse influence
 - ⚡ Lightweight: no dependencies
 
+## 🧰 Built With
+
+- **HTML5** — Markup structure and canvas element
+- **CSS3** — Styling and layout
+- **JavaScript (Vanilla)** — Animation logic and interactivity via DOM & Canvas APIs
+- **Canvas API** — Low-level rendering of particles and lines
+- **No frameworks or libraries required**
+
 ## 📂 Project Structure
 
 interactive-background/
