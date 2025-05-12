@@ -44,6 +44,8 @@ git clone https://github.com/Zainalabrori/interactive-background.git
 ### 2. Open in Browser
 You can open index.html directly in your preferred web browser. No build step required.
 
+---
+
 ### 🎮 Controls
 - Use the control panel at the bottom-left of the screen:
 - Reset Particles — Randomizes particle positions
@@ -52,8 +54,12 @@ You can open index.html directly in your preferred web browser. No build step re
 - Connection Distance — Adjust the max distance for particle connections
 - Mouse Influence — Adjust how much particles are pushed away by the mouse
 
+---
+
 ### 🖼️ Preview
 Coming soon!
+
+---
 
 ### 🛠️ Customization
 You can customize the animation by editing the config object in the JavaScript section of index.html:
@@ -70,12 +76,16 @@ const config = {
 };
 ```
 
+---
+
 Feel free to add more parameters or link external stylesheets/scripts if needed.
 
 ### 🤝 Contributing
 Contributions, issues, and feature requests are welcome!
 Feel free to fork the repository and submit a pull request.
 
-## ✨ Author
+---
+
+### ✨ Author
 
 Made with ❤️ by [Zainal Abrori](https://www.linkedin.com/in/zainal-abrori-bb242829b/)
